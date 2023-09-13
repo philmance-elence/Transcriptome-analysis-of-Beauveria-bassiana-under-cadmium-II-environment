@@ -1,0 +1,43 @@
+
+import sys
+
+
+# read node data
+with open(sys.argv[1], "r") as f:
+    edges = [line.strip().split() for line in f.readlines()]
+
+# build graph using adjacency list  
+graph = {}
+for edge in edges:
+    u, v = edge
+    if u not in graph:
+        graph[u] = []
+    if v not in graph:
+        graph[v] = []
+    graph[u].append(v)
+    graph[v].append(u)
+
+# DFS to find path from node a to node f with length limit
+def dfs(node, visited, path, graph, target, max_len):
+    visited[node] = True
+    path.append(node)
+    if node == target:
+        if len(path) <= max_len:
+            print(path)
+    else:
+        if len(path) <= max_len:
+            for neighbor in graph[node]:
+                if not visited[neighbor]:
+                    dfs(neighbor, visited, path, graph, target, max_len)
+    path.pop()
+    visited[node] = False
+
+# initialize DFS
+visited = {node: False for node in graph.keys()}
+path = []
+max_len = int(sys.argv[4])
+dfs(sys.argv[2], visited, path, graph, sys.argv[3], max_len)
+
+
+
+
